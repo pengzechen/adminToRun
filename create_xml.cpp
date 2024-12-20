@@ -126,37 +126,10 @@ bool is_admin() {
     return isAdmin == TRUE;
 }
 
-void request_admin_permissions() {
-    // 获取当前程序路径
-    char modulePath[MAX_PATH];
-    if (GetModuleFileNameA(NULL, modulePath, MAX_PATH) == 0) {
-        std::cerr << "Failed to get module path" << std::endl;
-        return;
-    }
-
-    // 创建 SHELLEXECUTEINFO 结构体
-    SHELLEXECUTEINFO seInfo;
-    ZeroMemory(&seInfo, sizeof(seInfo));
-    seInfo.cbSize = sizeof(seInfo);
-    seInfo.fMask = SEE_MASK_DEFAULT;
-    seInfo.hwnd = NULL;
-    seInfo.lpVerb = "runas"; // 请求管理员权限
-    seInfo.lpFile = modulePath;
-    seInfo.lpParameters = ""; // 可选参数
-    seInfo.lpDirectory = NULL;
-    seInfo.nShow = SW_SHOWNORMAL;
-
-    if (!ShellExecuteEx(&seInfo)) {
-        std::cerr << "Failed to request admin privileges" << std::endl;
-    }
-    exit(0); // 请求权限后退出当前进程
-}
-
 int main() {
 	// 如果没有管理员权限，提示用户请求管理员权限
     if (!is_admin()) {
         std::cout << "This program requires administrator privileges to run. Please allow the program to restart with elevated privileges." << std::endl;
-        // request_admin_permissions();
     }
 	
     const char *directory = "C:\\ProgramData\\ASAM\\XIL\\Implementation";
